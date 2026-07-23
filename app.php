@@ -35,7 +35,7 @@ function setup() {
     $per_page = get_option('piwigomedia_images_per_page', '30');
     
     $res['result'] = array(
-        "sites" => get_sites(),
+        "sites" => get_piwigo_sites(),
         "trMap" => get_tr_map(),
         "postId" => $post_id,
         "perPage" => $per_page

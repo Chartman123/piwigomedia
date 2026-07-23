@@ -66,7 +66,7 @@ function pwm_curl_get($url, array $get = NULL, array $options = array())
 }
 
 
-function get_sites() {
+function get_piwigo_sites() {
     $sites = array();
     foreach (explode("\n", get_option('piwigomedia_piwigo_urls', '')) as $u) {
         $tu = trim($u);
