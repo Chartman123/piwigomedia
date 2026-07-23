@@ -80,24 +80,24 @@ function get_piwigo_sites() {
 
 function get_tr_map() {
     $tr_map = array(
-        'Error while reading from' => __('Error while reading from', 'piwigomedia'),
-        'Please verify PiwigoMedia\'s configuration and try again.' => __('Please verify PiwigoMedia\'s configuration and try again.', 'piwigomedia'),
-        'Error reading image information, please try again.' => __('Error reading image information, please try again.', 'piwigomedia'),
-        'Loading...' => __('Loading...', 'piwigomedia'),
-        'Image type' => __('Image type', 'piwigomedia'),
-        'Link to' => __('Link to', 'piwigomedia'),
-        'Insert' => __('Insert', 'piwigomedia'),
-        'Post' => __('Post', 'piwigomedia'),
-        'Category' => __('Category', 'piwigomedia'),
-        'Site' => __('Site', 'piwigomedia'),
-        'Nothing' => __('Nothing', 'piwigomedia'),
-        'Page' => __('Page', 'piwigomedia'),
-        'Image code' => __('Image code', 'piwigomedia'),        
-        'Fullsize' => __('Fullsize', 'piwigomedia'),
-        'Thumbnail' => __('Thumbnail', 'piwigomedia'),
-        'No access' => __('No access', 'piwigomedia'),
-        'PiwigoMedia must be configured.' => __('PiwigoMedia must be configured.', 'piwigomedia'),
-        'Total images inserted:' => __('Total images inserted:', 'piwigomedia')
+        'Error while reading from' => esc_html__('Error while reading from', 'piwigomedia'),
+        'Please verify PiwigoMedia\'s configuration and try again.' => esc_html__('Please verify PiwigoMedia\'s configuration and try again.', 'piwigomedia'),
+        'Error reading image information, please try again.' => esc_html__('Error reading image information, please try again.', 'piwigomedia'),
+        'Loading...' => esc_html__('Loading...', 'piwigomedia'),
+        'Image type' => esc_html__('Image type', 'piwigomedia'),
+        'Link to' => esc_html__('Link to', 'piwigomedia'),
+        'Insert' => esc_html__('Insert', 'piwigomedia'),
+        'Post' => esc_html__('Post', 'piwigomedia'),
+        'Category' => esc_html__('Category', 'piwigomedia'),
+        'Site' => esc_html__('Site', 'piwigomedia'),
+        'Nothing' => esc_html__('Nothing', 'piwigomedia'),
+        'Page' => esc_html__('Page', 'piwigomedia'),
+        'Image code' => esc_html__('Image code', 'piwigomedia'),
+        'Fullsize' => esc_html__('Fullsize', 'piwigomedia'),
+        'Thumbnail' => esc_html__('Thumbnail', 'piwigomedia'),
+        'No access' => esc_html__('No access', 'piwigomedia'),
+        'PiwigoMedia must be configured.' => esc_html__('PiwigoMedia must be configured.', 'piwigomedia'),
+        'Total images inserted:' => esc_html__('Total images inserted:', 'piwigomedia')
     );
    
     

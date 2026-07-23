@@ -45,8 +45,8 @@ function register_piwigomedia_plugin() {
 
 function load_piwigomedia_headers() {
     wp_enqueue_style('piwigomedia', WP_PLUGIN_URL.'/piwigomedia/css/piwigomedia.css', false, '1.0', 'all');
-    wp_enqueue_style('galleria', WP_PLUGIN_URL.'/piwigomedia/js/galleria/themes/classic/galleria.classic.css', false, '1.0', 'all');
-    wp_register_script('galleria-min', WP_PLUGIN_URL.'/piwigomedia/js/galleria/galleria-1.2.9.min.js', __FILE__ );
+    wp_enqueue_style('galleria', WP_PLUGIN_URL.'/piwigomedia/js/galleria/themes/classic/galleria.classic.min.css', false, '1.0', 'all');
+    wp_register_script('galleria-min', WP_PLUGIN_URL.'/piwigomedia/js/galleria/galleria-1.6.1.min.js', __FILE__ );
     wp_enqueue_script('galleria-min');
 }
 
@@ -116,6 +116,15 @@ function pwg_gallery( $atts ) {
             'site'=>NULL, 'id'=>NULL, 'images'=>10, 'page'=>0, 'height'=>400
     ), $atts ) );
 
+    // --- SSRF Validation Start ---
+    $allowed_sites = get_piwigo_sites();
+    if (is_null($site) || !in_array($site, $allowed_sites)) {
+        // Do not render anything if the site is not in the allowed list.
+        // You could also return an HTML comment for debugging.
+        return '<!-- ' . __('Invalid Piwigo site specified in shortcode.', 'piwigomedia') . ' -->';
+    }
+    // --- SSRF Validation End ---
+
 $params = array(
 	"format" => "json", 
 	"method" => "pwg.categories.getImages",
@@ -128,13 +137,13 @@ $params = array(
 	return;
 $out = "";
 if (count($res->result->images) > 0) {
-	$out .= "<div id=\"piwigomedia-gallery-$id\" style=\"height: ".$height."px;\">";
-	foreach($res->result->images as $img) {
-		$out .= "<a href=\"".$img->element_url."\" target=\"_blank\"><img src=\"".$img->derivatives->thumb->url."\" data-title=\"".$img->name."\" data-link=\"".$img->derivatives->xxlarge->url."\"></a>";
-	}
+	$out .= "<div id=\"piwigomedia-gallery-" . esc_attr($id) . "\" style=\"height: " . esc_attr($height) . "px;\">";
+    foreach($res->result->images as $img) {
+        $out .= "<a href=\"".esc_url($img->element_url)."\" target=\"_blank\"><img src=\"".esc_url($img->derivatives->thumb->url)."\" data-title=\"".esc_attr($img->name)."\" data-link=\"".esc_url($img->derivatives->xxlarge->url)."\"></a>";
+    }
 	$out .= "</div>";
 }
-    return "$out <script>Galleria.loadTheme('".WP_PLUGIN_URL."'/piwigomedia/js/galleria/themes/classic/galleria.classic.min.js');Galleria.run('#piwigomedia-gallery-$id');</script>";
+    return "$out <script>Galleria.loadTheme('".WP_PLUGIN_URL."/piwigomedia/js/galleria/themes/classic/galleria.classic.min.js');Galleria.run('#piwigomedia-gallery-$id');</script>";
 }
 
 
@@ -143,6 +152,15 @@ function pwg_category( $atts ) {
     extract( shortcode_atts( array(
             'site'=>NULL, 'id'=>NULL, 'images'=>10, 'page'=>0
     ), $atts ) );
+
+    // --- SSRF Validation Start ---
+    $allowed_sites = get_piwigo_sites();
+    if (is_null($site) || !in_array($site, $allowed_sites)) {
+        // Do not render anything if the site is not in the allowed list.
+        // You could also return an HTML comment for debugging.
+        return '<!-- ' . __('Invalid Piwigo site specified in shortcode.', 'piwigomedia') . ' -->';
+    }
+    // --- SSRF Validation End ---
 
     $params = array(
             "format" => "json",
@@ -161,7 +179,7 @@ function pwg_category( $atts ) {
     if (count($res->result->images) > 0) {
             $out .= "<ul class=\"piwigomedia-category-preview\">";
             foreach($res->result->images as $img) {
-                    $out .= "<li><a class=\"piwigomedia-single-image\" href=\"".$img->element_url."\" target=\"_blank\"><img src=\"".$img->derivatives->thumb->url."\"></a></li>";
+                $out .= "<li><a class=\"piwigomedia-single-image\" href=\"".esc_url($img->element_url)."\" target=\"_blank\"><img src=\"".esc_url($img->derivatives->thumb->url)."\"></a></li>";
             }
             $out .= "</ul>";
     }
@@ -174,6 +192,15 @@ function pwg_image( $atts ) {
             'site'=>NULL, 'id'=>NULL, 
     ), $atts ) );
 
+    // --- SSRF Validation Start ---
+    $allowed_sites = get_piwigo_sites();
+    if (is_null($site) || !in_array($site, $allowed_sites)) {
+        // Do not render anything if the site is not in the allowed list.
+        // You could also return an HTML comment for debugging.
+        return '<!-- ' . __('Invalid Piwigo site specified in shortcode.', 'piwigomedia') . ' -->';
+    }
+    // --- SSRF Validation End ---
+
     $params = array(
             "format" => "json", 
             "method" => "pwg.images.getInfo",
@@ -183,7 +210,7 @@ function pwg_image( $atts ) {
     $res = json_decode($res);
     if ($res->stat != "ok")
             return;
-    $out = "<a class=\"piwigomedia-single-image\" href=\"".$res->result->element_url."\" target=\"_blank\"><img src=\"".$res->result->derivatives->thumb->url."\"></a>";
+    $out = "<a class=\"piwigomedia-single-image\" href=\"".esc_url($res->result->element_url)."\" target=\"_blank\"><img src=\"".esc_url($res->result->derivatives->thumb->url)."\"></a>";
     return "$out";
 }
 

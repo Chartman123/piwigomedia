@@ -77,7 +77,8 @@ app.controller(
         
         $scope.setup = function() {
             $scope.loading = true;
-	        $http.get('app.php?__a__=setup').success(function(data) {
+	        $http.get('app.php?__a__=setup&_wpnonce=' + piwigoMediaNonce).then(function(response) {
+                var data = response.data;
 	            angular.forEach(data.result, function(value, key) {
 	                this[key] = value;
 	            }, $scope);
@@ -121,11 +122,13 @@ app.controller(
                     "__a__": "forward", 
                     "format": "json", 
                     "method": "pwg.categories.getList", 
-                    "recursive": true}
+                    "recursive": true,
+                    "_wpnonce": piwigoMediaNonce}
             };
             
-            $http.get('app.php', config).success(
-                function(data) {
+            $http.get('app.php', config).then(
+                function(response) {
+                    var data = response.data;
                     if ((data == undefined) || data["stat"] != "ok") {
                         var msg = $scope.trMap["Error while reading from"] + " " + $scope.site + ". " +
                             $scope.trMap["Please verify PiwigoMedia\'s configuration and try again."];
@@ -181,11 +184,13 @@ app.controller(
                     "method": "pwg.categories.getImages", 
                     "cat_id": $scope.category, 
                     "page": $scope.page, 
-                    "per_page": $scope.perPage}
+                    "per_page": $scope.perPage,
+                    "_wpnonce": piwigoMediaNonce}
             };
 
-            $http.get('app.php', config).success(
-                function(data) {
+            $http.get('app.php', config).then(
+                function(response) {
+                    var data = response.data;
                     if ((data == undefined) || data["stat"] != "ok") {
                         var msg = $scope.trMap["Error reading image information, please try again."];
                         $scope.addMessage(msg, 'error');
@@ -337,4 +342,3 @@ app.controller(
 	    $scope.setup();
 
     }]);
-

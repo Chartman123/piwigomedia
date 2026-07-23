@@ -23,7 +23,10 @@ require_once('utils.php');
 
 if (get_current_user_id() == 0)
     die(__('No access', 'piwigomedia'));
-    
+
+if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'piwigomedia_nonce')) {
+    die(__('Security check failed.', 'piwigomedia'));
+}
 
 /*
 View: initial request to fetch essential data, including sites list, string 
@@ -51,7 +54,6 @@ function forward_http_request() {
     if ($_GET['__url__'] == '')
         die('_');
         
-    # TODO: validate $site
     $sites = array();
     foreach (explode("\n", get_option('piwigomedia_piwigo_urls', '')) as $u) {
         $tu = trim($u);
@@ -59,10 +61,13 @@ function forward_http_request() {
             $sites[] = $tu;
     }
     $site = $_GET['__url__'];
+    if (!in_array($site, $sites)) {
+        die(__('Invalid Piwigo site.', 'piwigomedia'));
+    }
 
     $params = array();
     foreach($_GET as $k=>$v) {
-        if (($k == "__url__") || ($k == "__a__"))
+        if (($k == "__url__") || ($k == "__a__") || ($k == '_wpnonce'))
             continue;
         $params[$k] = $v;
     }
